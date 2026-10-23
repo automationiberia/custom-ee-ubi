@@ -60,9 +60,9 @@ Para construir este EE sobre `ubi9/python-312` se resolvieron varios retos de ba
 
 Instalación de herramientas en el host:
 
-    dnf install -y podman
-    pip install ansible-builder ansible-navigator
-
+    subscription-manager repos --enable=ansible-automation-platform-2.6-for-rhel-9-x86_64-rpms
+    dnf install podman ansible-builder ansible-navigator -y
+    
 ---
 
 ## 🛠️ Paso 2: Construcción del Execution Environment
