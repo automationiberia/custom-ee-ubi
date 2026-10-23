@@ -1,0 +1,38 @@
+---
+version: 3
+
+images:
+  base_image:
+    name: registry.access.redhat.com/ubi9/python-312:latest
+
+additional_build_steps:
+  prepend_base:
+    - RUN rm -f /usr/bin/python3 /usr/bin/pip3 /usr/bin/pip && ln -s /usr/bin/python3.12 /usr/bin/python3 && ln -s /usr/bin/pip3.12 /usr/bin/pip3 && python3 -m pip install --upgrade pip
+  prepend_builder:
+    # Forzamos que la etapa builder use siempre python3.12 aunque un RPM instale python 3.9
+    - ENV PYCMD=/usr/bin/python3.12
+    - ENV PIPCMD="/usr/bin/python3.12 -m pip"
+    - RUN rm -f /usr/bin/python3 && ln -s /usr/bin/python3.12 /usr/bin/python3
+  prepend_final:
+    # Forzamos que la etapa final instale los wheels directamente en Python 3.12
+    - ENV PYCMD=/usr/bin/python3.12
+    - ENV PIPCMD="/usr/bin/python3.12 -m pip"
+    - RUN rm -f /usr/bin/python3 && ln -s /usr/bin/python3.12 /usr/bin/python3
+  append_final:
+    - ENV PYTHONPATH="/usr/local/lib64/python3.12/site-packages:/usr/local/lib/python3.12/site-packages"
+    - RUN rm -rf /usr/local/lib/python3.12/site-packages/enum* /usr/local/lib64/python3.12/site-packages/enum*
+    - RUN printf "/usr/local/lib64/python3.12/site-packages\n/usr/local/lib/python3.12/site-packages\n" > /opt/app-root/lib/python3.12/site-packages/usr_local.pth
+    - RUN rm -f /usr/bin/python3 && ln -s /usr/bin/python3.12 /usr/bin/python3
+
+dependencies:
+  ansible_core:
+    package_pip: ansible-core==2.16.14
+  ansible_runner:
+    package_pip: ansible-runner
+  galaxy: requirements.yml
+  python: requirements.txt
+  system: bindep.txt
+
+options:
+  package_manager_path: /usr/bin/dnf
+

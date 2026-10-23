@@ -1,0 +1,30 @@
+# Windows / WinRM / Autenticacion
+pywinrm[kerberos,credssp]
+requests-credssp
+requests-ntlm
+requests-kerberos
+
+# VMware
+pyVmomi
+pyVim
+
+# AWS
+boto3
+botocore
+
+# NetApp & Infoblox
+netapp-lib
+infoblox-client
+requests
+
+# Azure (paquetes clave de azcollection)
+azure-mgmt-compute
+azure-mgmt-network
+azure-mgmt-resource
+azure-mgmt-storage
+azure-identity
+
+# Crypto & general
+cryptography
+jmespath
+

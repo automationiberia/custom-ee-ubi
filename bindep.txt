@@ -1,0 +1,17 @@
+# Runtime final
+git [platform:rpm]
+rsync [platform:rpm]
+krb5-libs [platform:rpm]
+krb5-workstation [platform:rpm]
+libffi [platform:rpm]
+openssl-libs [platform:rpm]
+
+# Solo para la fase de compilacion (builder stage)
+gcc [platform:rpm compile]
+make [platform:rpm compile]
+python3.12-devel [platform:rpm compile]
+krb5-devel [platform:rpm compile]
+libffi-devel [platform:rpm compile]
+openssl-devel [platform:rpm compile]
+openldap-devel [platform:rpm compile]
+

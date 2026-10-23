@@ -1,0 +1,37 @@
+---
+- name: Smoke Test y Auditoria del Execution Environment
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Comprobar versiones de Ansible y Python
+      ansible.builtin.debug:
+        msg:
+          - "Ansible Core Version : {{ ansible_version.full }}"
+          - "Python Interpreter   : {{ ansible_playbook_python }}"
+          - "Python Version       : {{ lookup('pipe', ansible_playbook_python ~ ' --version') }}"
+
+    - name: Validar importacion de librerias criticas en el interprete activo
+      ansible.builtin.command:
+        cmd: >-
+          {{ ansible_playbook_python }} -c
+          "import winrm, boto3, pyVmomi, netapp_lib, azure.identity, cryptography;
+          print('WinRM, Boto3, PyVmomi, NetApp, Azure Identity y Cryptography importados con exito')"
+      register: lib_check
+      changed_when: false
+
+    - name: Mostrar estado de dependencias Python
+      ansible.builtin.debug:
+        msg: "{{ lib_check.stdout }}"
+
+    - name: Listar colecciones Ansible presentes en el EE
+      ansible.builtin.command:
+        cmd: ansible-galaxy collection list
+      register: collections_list
+      changed_when: false
+
+    - name: Mostrar resumen de colecciones instaladas
+      ansible.builtin.debug:
+        msg: "{{ collections_list.stdout_lines }}"
+
